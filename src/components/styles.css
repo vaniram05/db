@@ -1,0 +1,15 @@
+
+.leftHalf {
+   background: url('https://images.unsplash.com/photo-1682687220063-4742bd7fd538?ixlib=rb-4.0.3&ixid=M3wxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1075&q=80');
+   width: 50%;
+   position: absolute;
+   left: 0px;
+   height: 100%;
+}
+
+.rightHalf {
+    position: absolute;
+    right: 10%;
+    width:30%;
+    top: 35%;
+  }

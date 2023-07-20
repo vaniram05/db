@@ -14,8 +14,7 @@ export default function MenuNav() {
   return (
     <Menu stackable inverted>
       <Menu.Item>
-        <img src="/logo.png" alt="img" />
-        {/* <img alt="logo" src='https://res.cloudinary.com/crunchbase-production/image/upload/c_lpad,f_auto,q_auto:eco,dpr_1/fhsuyzojq8wgbpf5bmam' /> */}
+        <img src={"./logo.png"} alt="img" />
       </Menu.Item>
 
       <Menu.Item
@@ -29,7 +28,7 @@ export default function MenuNav() {
         name='reqTable'
         onClick={handleItemClick}
       >
-        All Build Requests
+        Build Requests
       </Menu.Item>
 
       <Dropdown item text='in Beta'>

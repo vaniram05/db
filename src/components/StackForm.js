@@ -1,12 +1,12 @@
-import React, { Component } from 'react'
+import React, { Component, useState } from 'react'
 import {
-    Button,
     Divider,
     Form,
     Message,
     Container,
     Header
 } from 'semantic-ui-react'
+import { useQuery } from '../contexts/QueryContext'
 
 const cellCountOptions = [
     { key: '1', text: '1', value: '1' },
@@ -32,55 +32,81 @@ const projectAreaOptions = [
     { key: 'Development', text: 'Development', value: 'Development' },
 ]
 
-class StackForm extends Component {
-    state = { owner: '', cellCount: '', projectArea: '', activeArea: '', testType: '', cathode: '', anode: '', membrane: '', comments: '', submittedOwner: '', submittedCellCount: '', submittedProjectArea: '', submittedActiveArea: '', submittedTestType: '', submittedCathode: '', submittedAnode: '', submittedMembrane: '', submittedComments: '', successfulSubmit: false }
-    handleChange = (e, { name, value }) => this.setState({ [name]: value });
-    handleSubmit = () => {
-        const { owner, cellCount, projectArea, activeArea, testType, cathode, anode, membrane, comments } = this.state;
-        this.setState({ submittedOwner: owner, submittedCellCount: cellCount, submittedProjectArea: projectArea, submittedActiveArea: activeArea, submittedTestType: testType, submittedCathode: cathode, submittedAnode: anode, submittedMembrane: membrane, submittedComments: comments, successfulSubmit: true });
-        this.setState({ owner: '', cellCount: '', projectArea: '', activeArea: '', testType: '', cathode: '', anode: '', membrane: '', comments: '' });
+export default function StackForm() {
+    const [formData, setFormData] = useState({ owner: '', cellCount: '', activeArea: '', projectArea: '', testType: '', cathode: '', anode: '', membrane: '', comments: '' });
+    const [submitMessage, setSubmitMessage] = useState();
+    const [loading, setLoading] = useState(false);
+    const { submitTestReqForm } = useQuery();
+
+    const handleInputChange = (e) => {
+        setFormData({ ...formData, [e.target.name]: e.target.value });
+    };
+    const handleDropdownChange = (e, eName) => {
+        setFormData({ ...formData, [eName]: e.target.textContent });
+    };
+
+    async function handleSubmit() {
+        setLoading(true);
+        const formContent = {
+                owner: formData.owner,
+                cellCount: parseInt(formData.cellCount),
+                activeArea: parseInt(formData.activeArea),
+                projectArea: formData.projectArea,
+                testType: formData.testType,
+                cathode: formData.cathode,
+                anode: formData.anode,
+                membrane: formData.membrane,
+                comments: formData.comments,
+            }
+        const {data, error} = await submitTestReqForm(formContent)
+        if (data) {
+            setSubmitMessage(formData.owner + ", your request has been submitted for approval!");
+            setFormData({ owner: '', cellCount: '', activeArea: '', projectArea: '', testType: '', cathode: '', anode: '', membrane: '', comments: '' });
+        } else {
+            setSubmitMessage(error);
+        }
+        setLoading(false);
     }
 
-    render() {
-        const { owner, cellCount, projectArea, activeArea, testType, cathode, anode, membrane, comments, submittedOwner, submittedCellCount, submittedProjectArea, submittedActiveArea, submittedTestType, submittedCathode, submittedAnode, submittedMembrane, submittedComments, successfulSubmit } = this.state;
-
-        return (
+    return (
+        <>
             <Container>
                 <Divider hidden />
-                <Header as='h2' textAlign="center">Test Request Form</Header>
+                <Header as='h2' textAlign="center">Build Request Form</Header>
                 <Divider section />
-                <Form onSubmit={this.handleSubmit}>
-                    {(successfulSubmit == true)
+                <Form onSubmit={handleSubmit} loading={loading}>
+                    {(submitMessage)
                         ? <Message
-                            positive
-                            header='Form Completed'
-                            content= {submittedOwner.concat(", your request has been submitted for approval!")}
+                            negative={!submitMessage.includes('has been submitted')}
+                            positive={submitMessage.includes('has been submitted')}
+                            header='Form Submitted'
+                            content={submitMessage}
                         /> : <></>
                     }
                     <Form.Group>
                         <Form.Field required>
                             <label>Owner: </label>
-                            <Form.Input placeholder='Owner of request' name='owner' onChange={this.handleChange} value={owner} />
+                            <Form.Input placeholder='Stack Owner' name='owner' onChange={(e) => handleInputChange(e)} value={formData.owner} />
                         </Form.Field>
                     </Form.Group>
                     <Form.Group widths="equal">
                         <Form.Field required>
                             <label>Cell Count: </label>
-                            <Form.Select placeholder='Select cell count' value={cellCount} onChange={this.handleChange} name='cellCount' required options={cellCountOptions} />
+                            <Form.Select placeholder='Select cell count' value={formData.cellCount} onChange={(e) => handleDropdownChange(e, 'cellCount')} name='cellCount' required options={cellCountOptions} />
                         </Form.Field>
                         <Form.Field required>
                             <label>Project Area: </label>
-                            <Form.Select placeholder='Select project area' onChange={this.handleChange} value={projectArea} name='projectArea' required options={projectAreaOptions} />
+                            <Form.Select placeholder='Select project area' onChange={(e) => handleDropdownChange(e, 'projectArea')} value={formData.projectArea} name='projectArea' required options={projectAreaOptions} />
                         </Form.Field>
                         <Form.Field required>
                             <label>Active Area: </label>
-                            <Form.Select placeholder='Select active area' onChange={this.handleChange} value={activeArea} required name='activeArea' options={activeAreaOptions} />
+                            <Form.Select placeholder='Select active area' onChange={(e) => handleDropdownChange(e, 'activeArea')} value={formData.activeArea} required name='activeArea' options={activeAreaOptions} />
                         </Form.Field>
                     </Form.Group>
                     <Form.Group>
                         <Form.Field required>
                             <label>Test Type: </label>
-                            <Form.Select placeholder='Select your test type' onChange={this.handleChange} value={testType} name='testType' required options={testTypeOptions} />
+                            <Form.Select placeholder='Select your test type' onChange={(e) => handleDropdownChange(e, 'testType')} value={formData.testType} name='testType' required options={testTypeOptions} />
                         </Form.Field>
                     </Form.Group>
                     <Divider section />
@@ -88,27 +114,26 @@ class StackForm extends Component {
                     <Form.Group widths='equal'>
                         <Form.Field>
                             <label>Cathode: </label>
-                            <Form.Input placeholder='Cathode Info' onChange={this.handleChange} value={cathode} name='cathode' />
+                            <Form.Input placeholder='Cathode Info' onChange={(e) => handleInputChange(e)} value={formData.cathode} name='cathode' />
                         </Form.Field>
                         <Form.Field>
                             <label>Anode: </label>
-                            <Form.Input placeholder='Anode Info' onChange={this.handleChange} value={anode} name='anode' />
+                            <Form.Input placeholder='Anode Info' onChange={(e) => handleInputChange(e)} value={formData.anode} name='anode' />
                         </Form.Field>
                         <Form.Field>
                             <label>Membrane: </label>
-                            <Form.Input placeholder='Membrane Info' onChange={this.handleChange} value={membrane} name='membrane' />
+                            <Form.Input placeholder='Membrane Info' onChange={(e) => handleInputChange(e)} value={formData.membrane} name='membrane' />
                         </Form.Field>
                     </Form.Group>
                     <Form.Field>
                         <label>Comments: </label>
-                        <Form.TextArea placeholder='Anything important to add?' onChange={this.handleChange} value={comments} name='comments' />
+                        <Form.TextArea placeholder='Anything important to add?' onChange={(e) => handleInputChange(e)} value={formData.comments} name='comments' />
                     </Form.Field>
                     <Divider hidden />
-                    <Form.Button content="Submit" color="teal" disabled={owner == '' || cellCount == '' || projectArea == '' || activeArea == '' || testType == ''} />
+                    <Form.Button content="Submit" color="teal" disabled={formData.owner == '' || formData.cellCount == '' || formData.projectArea == '' || formData.activeArea == '' || formData.testType == ''} />
                 </Form>
             </Container>
-        )
-    }
+        </>
+    );
 }
 
-export default StackForm

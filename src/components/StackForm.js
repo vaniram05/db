@@ -8,12 +8,6 @@ import {
 } from 'semantic-ui-react'
 import { useQuery } from '../contexts/QueryContext'
 
-const cellCountOptions = [
-    { key: '1', text: '1', value: '1' },
-    { key: '3', text: '3', value: '3' },
-    { key: '5', text: '5', value: '5' },
-]
-
 const activeAreaOptions = [
     { key: '5', text: '5', value: '5' },
     { key: '100', text: '100', value: '100' },
@@ -48,17 +42,17 @@ export default function StackForm() {
     async function handleSubmit() {
         setLoading(true);
         const formContent = {
-                owner: formData.owner,
-                cellCount: parseInt(formData.cellCount),
-                activeArea: parseInt(formData.activeArea),
-                projectArea: formData.projectArea,
-                testType: formData.testType,
-                cathode: formData.cathode,
-                anode: formData.anode,
-                membrane: formData.membrane,
-                comments: formData.comments,
-            }
-        const {data, error} = await submitTestReqForm(formContent)
+            owner: formData.owner,
+            cellCount: parseInt(formData.cellCount),
+            activeArea: parseInt(formData.activeArea),
+            projectArea: formData.projectArea,
+            testType: formData.testType,
+            cathode: formData.cathode,
+            anode: formData.anode,
+            membrane: formData.membrane,
+            comments: formData.comments,
+        }
+        const { data, error } = await submitTestReqForm(formContent)
         if (data) {
             setSubmitMessage(formData.owner + ", your request has been submitted for approval!");
             setFormData({ owner: '', cellCount: '', activeArea: '', projectArea: '', testType: '', cathode: '', anode: '', membrane: '', comments: '' });
@@ -92,7 +86,7 @@ export default function StackForm() {
                     <Form.Group widths="equal">
                         <Form.Field required>
                             <label>Cell Count: </label>
-                            <Form.Select placeholder='Select cell count' value={formData.cellCount} onChange={(e) => handleDropdownChange(e, 'cellCount')} name='cellCount' required options={cellCountOptions} />
+                            <Form.Input placeholder='Cell count' name='cellCount' onChange={(e) => handleInputChange(e)} value={formData.cellCount} />
                         </Form.Field>
                         <Form.Field required>
                             <label>Project Area: </label>

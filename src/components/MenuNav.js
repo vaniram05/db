@@ -14,8 +14,7 @@ export default function MenuNav() {
   return (
     <Menu stackable inverted>
       <Menu.Item>
-        <img src="/logo.png" alt="img" />
-        {/* <img alt="logo" src='https://res.cloudinary.com/crunchbase-production/image/upload/c_lpad,f_auto,q_auto:eco,dpr_1/fhsuyzojq8wgbpf5bmam' /> */}
+        <img alt="logo" src='https://res.cloudinary.com/crunchbase-production/image/upload/c_lpad,f_auto,q_auto:eco,dpr_1/fhsuyzojq8wgbpf5bmam' />
       </Menu.Item>
 
       <Menu.Item
@@ -32,10 +31,17 @@ export default function MenuNav() {
         All Build Requests
       </Menu.Item>
 
+      <Menu.Item
+        name='dataDash'
+        onClick={handleItemClick}
+      >
+        Analyze Data
+      </Menu.Item>
+
       <Dropdown item text='in Beta'>
         <Dropdown.Menu>
-          <Dropdown.Item onClick={handleItemClick} name="dataDash">Analyze Data</Dropdown.Item>
           <Dropdown.Item onClick={handleItemClick} name="enterNew">Upload Data</Dropdown.Item>
+          <Dropdown.Item onClick={handleItemClick} name="stackBuild">Stack Build Form</Dropdown.Item>
         </Dropdown.Menu>
       </Dropdown>
 

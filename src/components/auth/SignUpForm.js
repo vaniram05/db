@@ -32,7 +32,8 @@ export default function SignUpForm() {
             </div>
 
             <div className='rightHalf'>
-                <Header as='h1' textAlign='left'>Sign Up!</Header>
+                <Header as='h1' textAlign='left'>Sign Up</Header>
+                <p><em>Please make an account here to get access to the dashboard.</em></p>
                 {error && <Message warning content={error} />}
                 <Divider></Divider>
                 <Form onSubmit={handleSubmit} loading={loading}>
@@ -44,7 +45,7 @@ export default function SignUpForm() {
                         <label>Password</label>
                         <Input placeholder="Password" type='password' name='password' required value={password} onChange={(e) => setPassword(e.target.value)} />
                     </Form.Field>
-                    <label>&nbsp;&nbsp;&nbsp;Have an account? <Link to="/">Sign in!</Link></label>
+                    <label>&nbsp;&nbsp;&nbsp;Signed up already? <Link to="/">Sign in</Link></label>
                     <Divider></Divider>
                     <Form.Button color="violet" type='submit' content="Sign Up" />
                 </Form>

@@ -28,3 +28,9 @@
 .nopage2 {
    font-size: 30px;
 }
+
+.vertical-center {  
+   margin-top: 35%;
+   margin-right: 5%;
+   margin-left: 5%;
+ }
